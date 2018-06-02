@@ -73,7 +73,7 @@ def main():
             count = count + 1
             magic.udp_buffer.append(data + ": " + str(count))
             if count % int(args["bsize"]) == 0:
-                udp_buffer = buffer_manipulation(received_data, manipulation_type=args['manipulation_type'])
+                udp_buffer = buffer_manipulation(magic.udp_buffer.append, manipulation_type=args['manipulation_type'])
                 for i in udp_buffer:
                     magic.send_udp(data=i)
                 magic.udp_buffer[:] = []
