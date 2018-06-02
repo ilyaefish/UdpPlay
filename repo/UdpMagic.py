@@ -65,7 +65,7 @@ def main():
         magic.server_up()
         count = 0
         magic.udp_buffer = []
-        received_data = []
+        # received_data = []
 
         while True:
             data, addr = magic.server_socket.recvfrom(1024)
@@ -73,14 +73,11 @@ def main():
             count = count + 1
             magic.udp_buffer.append(data + ": " + str(count))
             if count % int(args["bsize"]) == 0:
-                # TODO: Instead run the function here
-
-                print "Now I want to send the manipulated buffer "
                 udp_buffer = buffer_manipulation(received_data, manipulation_type=args['manipulation_type'])
                 for i in udp_buffer:
                     magic.send_udp(data=i)
-                udp_buffer[:] = []
-                received_data[:] = []
+                magic.udp_buffer[:] = []
+                # received_data[:] = []
 
 
 if __name__ == '__main__':
