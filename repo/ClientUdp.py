@@ -7,7 +7,7 @@ parser.add_argument('-p', '--port', help='The port of the server', required=Fals
 args = vars(parser.parse_args())
 
 UDP_IP_ADDRESS = args['ip']
-UDP_PORT_NO = args['port']
+UDP_PORT_NO = int(args['port'])
 Message = "Hello, Server"
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientSock.sendto(Message, (UDP_IP_ADDRESS, UDP_PORT_NO))
