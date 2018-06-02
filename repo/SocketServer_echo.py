@@ -1,3 +1,4 @@
+import argparse
 import logging
 import sys
 import SocketServer
@@ -82,35 +83,22 @@ if __name__ == '__main__':
     import socket
     import threading
 
-    address = ('localhost', 0)  # let the kernel give us a port
+    parser = argparse.ArgumentParser(description='Description of your program')
+    parser.add_argument('-p', '--port', help='Description for foo argument', required=False, default=5000)
+    # parser.add_argument('-b', '--bar', help='Description for bar argument', required=True)
+    args = vars(parser.parse_args())
+
+    address = ('localhost', args['port'])  # let the kernel give us a port
     server = EchoServer(address, EchoRequestHandler)
     ip, port = server.server_address  # find out what port we were given
+
 
     t = threading.Thread(target=server.serve_forever)
     t.setDaemon(True)  # don't hang on exit
     t.start()
-
-    logger = logging.getLogger('client')
-    logger.info('Server on %s:%s', ip, port)
-
-    # Connect to the server
-    logger.debug('creating socket')
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    logger.debug('connecting to server')
-    s.connect((ip, port))
-
-    # Send the data
-    message = 'Hello, world'
-    logger.debug('sending data: "%s"', message)
-    len_sent = s.send(message)
-
-    # Receive a response
-    logger.debug('waiting for response')
-    response = s.recv(len_sent)
-    logger.debug('response from server: "%s"', response)
-
-    # Clean up
-    logger.debug('closing socket')
-    s.close()
-    logger.debug('done')
-    server.socket.close()
+    while True:
+        logger = logging.getLogger('client')
+        logger.info('Server on %s:%s', ip, port)
+        logger.debug('waiting for response')
+        response = s.recv(len_sent)
+        logger.debug('response from server: "%s"', response)
