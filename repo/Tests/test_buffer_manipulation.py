@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from repo.ServerUdp import buffer_manipulation
+from repo.UdpMagic import buffer_manipulation
 
 
-class TestBuffer_manipulation(TestCase):
+class TestBuffermanipulation(TestCase):
     def test_buffer_manipulation(self):
         data = ['a', 'b', 'c']
         reversed_data = ['c', 'b', 'a']

@@ -53,6 +53,8 @@ def main():
     parser.add_argument('--client', action='store_true', help='When you run the service as a client', required=False)
     parser.add_argument('--debug', action='store_true', help='Debugger', required=False)
     args = vars(parser.parse_args())
+    print "Running server with"
+    print args
     magic = UdpMagic(ip=args['ip'], port=int(args['port']), phone_ip=args['phone_ip'],
                      phone_port=int(args['phone_port']))
     if args['client']:
