@@ -1,11 +1,11 @@
 import argparse
 import socket
 import time
+__author__ = "Ilya F"
 
 
 def buffer_manipulation(buffer_list, manipulation_type):
     if manipulation_type == "reverse":
-
         reverse_list = buffer_list[::-1]
         return reverse_list
     elif manipulation_type == "duplicate":
@@ -18,6 +18,7 @@ def buffer_manipulation(buffer_list, manipulation_type):
         double_list = buffer_list[:]
         double_list.extend(buffer_list)
         return double_list
+    # TODO: add rendom
 
 
 class UdpMagic:
@@ -45,9 +46,9 @@ def main():
     parser.add_argument('-i', '--ip', help='The ip of the Server', required=False, default="0.0.0.0")
     parser.add_argument('-p', '--port', help='The port of the server', required=False, default=5001)
     parser.add_argument('--phone_ip', help='The ip of the Server', required=False, default="192.168.1.1")
+    parser.add_argument('--phone_port', help='The port of the server', required=False, default=5002)
     parser.add_argument('--manipulation_type', help='The manipulation type; reverse, duplicate, double', required=False,
                         default="reverse")
-    parser.add_argument('--phone_port', help='The port of the server', required=False, default=5002)
     parser.add_argument('--bsize', help='Buffer Size, The number of the udp packet you want to buffer ', required=False,
                         default=3)
     parser.add_argument('--client', action='store_true', help='When you run the service as a client', required=False)
@@ -67,19 +68,21 @@ def main():
         magic.server_up()
         count = 0
         magic.udp_buffer = []
-        # received_data = []
 
         while True:
             data, addr = magic.server_socket.recvfrom(1024)
-            print "Message: " + str(count), data
+            print "Count: " + str(count) + " Message: " + data
             count = count + 1
-            magic.udp_buffer.append(data + ": " + str(count))
+            magic.udp_buffer.append(data)
             if count % int(args["bsize"]) == 0:
-                udp_buffer = buffer_manipulation(magic.udp_buffer.append, manipulation_type=args['manipulation_type'])
-                for i in udp_buffer:
+                ready_data = buffer_manipulation(magic.udp_buffer, manipulation_type=args['manipulation_type'])
+                for i in ready_data:
                     magic.send_udp(data=i)
+                    if args["debug"]:
+                        print "Sent "+i
+                print "Finish sending the buffer"
                 magic.udp_buffer[:] = []
-                # received_data[:] = []
+                ready_data[:] = []
 
 
 if __name__ == '__main__':
